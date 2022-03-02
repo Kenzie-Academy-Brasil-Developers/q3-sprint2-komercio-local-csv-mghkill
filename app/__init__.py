@@ -24,18 +24,17 @@ def todos_nomes():
             item["id"] = int(item["id"])
             item["price"] = float(item["price"])
             output.append(item)
-        return jsonify(output)
+        return jsonify(output), HTTPStatus.OK
     
 @app.get('/products/<products_id>')
 def nomes_id(products_id):
     with open(FILEPATH, "r") as file_products:
         reader = list(DictReader(file_products))
         output = {}
-        print(reader)
         for item in reader.copy():
             if int(item["id"]) == int(products_id):
                 item["id"] = int(item["id"])
                 item["price"] = float(item["price"])
                 output = item
-        return output
+        return output, HTTPStatus.OK
         
