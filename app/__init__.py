@@ -1,7 +1,7 @@
 # Suas rotas aqui
 from flask import Flask, request, jsonify
 from csv import DictReader
-
+from http import HTTPStatus
 app = Flask(__name__)
 
 
@@ -17,7 +17,7 @@ def todos_nomes():
         else:
             page = list(reader)[((value_1 + value_2)//2 + 1):((value_1 + value_2)//2 + 1)+4]
 
-        return jsonify(page)
+        return jsonify(page), HTTPStatus.ok
     
 @app.get('/products/<products_id>')
 def nomes_id(products_id):
@@ -28,5 +28,5 @@ def nomes_id(products_id):
         for item in reader.copy():
             if int(item["id"]) == int(products_id):
                 output = item
-        return output
+        return output, HTTPStatus.ok
         
