@@ -2,12 +2,15 @@
 from flask import Flask, request, jsonify
 from csv import DictReader
 from http import HTTPStatus
+import os
 app = Flask(__name__)
 
+FILEPATH = os.getenv("FILEPATH")
 
 @app.get('/products')
 def todos_nomes():
-    with open("data/products.csv", "r") as file_products:
+    
+    with open(FILEPATH, "r") as file_products:
         value_1 = int(request.args.get("page", 1))
         value_2 = int(request.args.get("per_page", 3))
         reader = DictReader(file_products)
@@ -25,7 +28,7 @@ def todos_nomes():
     
 @app.get('/products/<products_id>')
 def nomes_id(products_id):
-    with open("data/products.csv", "r") as file_products:
+    with open(FILEPATH, "r") as file_products:
         reader = list(DictReader(file_products))
         output = {}
         print(reader)
