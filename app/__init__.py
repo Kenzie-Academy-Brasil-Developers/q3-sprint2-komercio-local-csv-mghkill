@@ -16,8 +16,12 @@ def todos_nomes():
             page = list(reader)[0:3]
         else:
             page = list(reader)[((value_1 + value_2)//2 + 1):((value_1 + value_2)//2 + 1)+4]
-
-        return jsonify(page), HTTPStatus.ok
+        output = []
+        for item in page.copy():
+            item["id"] = int(item["id"])
+            item["price"] = int(item["price"].split(".")[0])
+            output.append(item)
+        return jsonify(output)
     
 @app.get('/products/<products_id>')
 def nomes_id(products_id):
@@ -27,6 +31,8 @@ def nomes_id(products_id):
         print(reader)
         for item in reader.copy():
             if int(item["id"]) == int(products_id):
+                item["id"] = int(item["id"])
+                item["price"] = int(item["price"].split(".")[0])
                 output = item
-        return output, HTTPStatus.ok
+        return output
         
