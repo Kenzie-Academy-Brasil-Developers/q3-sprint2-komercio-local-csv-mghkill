@@ -19,7 +19,7 @@ def todos_nomes():
         output = []
         for item in page.copy():
             item["id"] = int(item["id"])
-            item["price"] = int(item["price"].split(".")[0])
+            item["price"] = float(item["price"])
             output.append(item)
         return jsonify(output)
     
@@ -32,7 +32,7 @@ def nomes_id(products_id):
         for item in reader.copy():
             if int(item["id"]) == int(products_id):
                 item["id"] = int(item["id"])
-                item["price"] = int(item["price"].split(".")[0])
+                item["price"] = float(item["price"])
                 output = item
         return output
         
