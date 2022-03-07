@@ -105,9 +105,9 @@ def change_request_products(product_id):
 
     if count == 1:
         change_product(data_output)
-        return {"sucess": new_data_output}
+        return {"sucess": new_data_output}, HTTPStatus.OK
 
-    return {"error": "product id 1 not found"}
+    return {"error": "product id 1 not found"}, HTTPStatus.BAD_REQUEST
 
 @app.delete('/products/<product_id>')
 def delete_products(product_id):
