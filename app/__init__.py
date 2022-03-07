@@ -18,7 +18,7 @@ def names():
     
     with open(FILEPATH, "r") as file_products:
         # 
-        reader = DictReader(file_products, ["",""])
+        reader = DictReader(file_products)
         
         
         value_1 = int(request.args.get("page", 1))
@@ -45,7 +45,10 @@ def names_id(products_id):
                 item["id"] = int(item["id"])
                 item["price"] = float(item["price"])
                 output = item
-        return output, HTTPStatus.OK
+        if output:
+            return output, HTTPStatus.OK
+        
+    return {"error": "product id 1 not found"}    
         
 @app.post('/products')
 def add_products():
@@ -77,6 +80,7 @@ def change_request_products(product_id):
     new_data_output = []
     data_output = []
     data_keys_list = list(data.keys())
+    count = 0
     
     
     with open(FILEPATH, "r") as file_products:
@@ -89,21 +93,24 @@ def change_request_products(product_id):
             new_price = float(data.get('price'))
             new_data_output = {"id": new_id, "name": new_name, "price": new_price}
         else:
-            return jsonify([{"error": "Requisição inválida!"},{"example": {"name": "batata", "price": "10.50"}}]), HTTPStatus.BAD_REQUEST            
+            return jsonify([{"error": "product not found"},{"example": {"name": "batata", "price": "10.50"}}]), HTTPStatus.BAD_REQUEST            
         for dict in reader:
             if int(dict["id"]) == int(product_id):
                 data_output.append(new_data_output)
+                count += 1
             else:
                 dict["id"] = int(dict["id"])
                 dict["price"] = float(dict["price"])
-                data_output.append(dict)                    
+                data_output.append(dict) 
 
-    change_product(data_output)
-    return {"sucess": new_data_output}
+    if count == 1:
+        change_product(data_output)
+        return {"sucess": new_data_output}
+
+    return {"error": "product id 1 not found"}
 
 @app.delete('/products/<product_id>')
 def delete_products(product_id):
-    data = request.get_json()
     delete_data_output = []
     data_output = []
     
@@ -121,4 +128,4 @@ def delete_products(product_id):
                 data_output.append(dict)                    
 
     change_product(data_output)
-    return {"deleted": delete_data_output}
+    return {"deleted": delete_data_output}, HTTPStatus.OK
